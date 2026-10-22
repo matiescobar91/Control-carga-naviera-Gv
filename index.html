@@ -1,0 +1,248 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Carga"><meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚓%3C/text%3E%3C/svg%3E">
+<title>Control de carga</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--tx:#14213d;--mu:#667085;--bd:#d9dde3;--pri:#1f3a5f;--gr:#546e7a;--grb:#eceff1;--g:#2e7d32;--gb:#e8f5e9;--a:#9a5b00;--ab:#fff3e0;--b:#1565c0;--bb:#e3f2fd;--r:#c62828;--rb:#ffebee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1520;--card:#18212f;--tx:#e8edf5;--mu:#9aa7b8;--bd:#2b3648;--pri:#4f7cc0;--gr:#b0bec5;--grb:#263238;--g:#81c784;--gb:#1b3a1f;--a:#ffb74d;--ab:#3e2c0d;--b:#64b5f6;--bb:#102a43;--r:#ef5350;--rb:#3c1618}}
+:root[data-theme="dark"]{--bg:#0f1520;--card:#18212f;--tx:#e8edf5;--mu:#9aa7b8;--bd:#2b3648;--pri:#4f7cc0;--gr:#b0bec5;--grb:#263238;--g:#81c784;--gb:#1b3a1f;--a:#ffb74d;--ab:#3e2c0d;--b:#64b5f6;--bb:#102a43;--r:#ef5350;--rb:#3c1618}
+*{box-sizing:border-box}html,body{margin:0}body{font:16px/1.35 -apple-system,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx)}
+main{max-width:760px;margin:auto;padding:12px 12px 96px}small{color:var(--mu)}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin:8px 0}.rw{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.n{background:var(--grb);color:var(--gr)}.g{background:var(--gb);color:var(--g)}.a{background:var(--ab);color:var(--a)}.b{background:var(--bb);color:var(--b)}.r{background:var(--rb);color:var(--r)}
+.p{display:inline-block;padding:2px 9px;border-radius:99px;font-size:13px;font-weight:700;white-space:nowrap}
+.gd{display:grid;grid-template-columns:1fr 1fr;gap:8px}.t{border-radius:12px;padding:12px}.t b{display:block;font-size:30px}.t span{font-size:13px;font-weight:600}
+.in{display:block;width:100%;font-size:17px;padding:13px;border:1px solid var(--bd);border-radius:10px;margin:6px 0;background:var(--card);color:var(--tx);font-family:inherit}
+.bt{display:block;width:100%;text-align:center;min-height:52px;font-size:17px;font-weight:700;border:0;border-radius:12px;background:var(--pri);color:#fff;margin:8px 0;padding:14px}.bt.s{background:var(--grb);color:var(--tx)}.bt:disabled{opacity:.4}
+.bn{padding:12px;border-radius:12px;font-weight:700;margin:8px 0}.bn.r{background:var(--r);color:#fff}.bn.a{border:1px solid var(--a)}
+.pr{background:var(--r);color:#fff;text-align:center;padding:6px;font-weight:700;font-size:14px}
+#nv{position:fixed;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+#nv button{border:0;background:none;padding:14px 2px;font-size:13px;color:var(--mu);font-weight:700}#nv .on{color:var(--pri);box-shadow:inset 0 3px var(--pri)}
+.mo{position:fixed;inset:0;background:#0008;display:flex;align-items:flex-end;justify-content:center;z-index:9}#md2 .mo{z-index:10}
+.sh{background:var(--card);width:100%;max-width:760px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.nm{width:72px;font-size:18px;padding:8px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--tx)}input[type=checkbox],input[type=radio]{width:26px;height:26px;margin-right:8px}
+.rd label{display:flex;align-items:center;padding:8px 0}.ts{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#000c;color:#fff;padding:10px 16px;border-radius:99px;z-index:20}
+s{opacity:.5}h3{margin:4px 0 8px}a.bt{text-decoration:none;display:flex;align-items:center;justify-content:center}u{text-decoration:underline;color:var(--pri);cursor:pointer}
+pre.cp{white-space:pre-wrap;font:15px/1.4 -apple-system,Helvetica,Arial,sans-serif;background:var(--grb);border-radius:10px;padding:12px;margin:8px 0}
+</style></head><body>
+<div id="top"></div><main id="m"></main><nav id="nv"></nav><div id="md"></div><div id="md2"></div>
+<script>
+const VER='3 · 21-oct-2026';
+const $=s=>document.querySelector(s),h=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
+nz=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(),
+hs=s=>{let x=5381;for(const c of s)x=(x*33^c.charCodeAt(0))>>>0;return x.toString(36)},
+fd=t=>new Date(t).toLocaleString('es-CL',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
+mo=n=>'$'+Math.abs(n).toLocaleString('es-CL');
+// Estado de pantalla: md = ventana abierta (mk = cuál es: b bulto, f ficha, l liberar/pago, c comprobante); busy = registrando; hd/ig = botón "atrás"; cpt = comprobante
+let mode=localStorage.getItem('cc.mode')||'real',S,tab='i',q='',cur=null,dc=null,sel={},md='',mk='',blk=false,rs='p',es='l',pf=[],busy=0,hd=0,ig=0,cpt=null;
+const IDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('cc-fotos',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}),
+fput=async(k,v)=>{const d=await IDB();return new Promise((ok,no)=>{const t=d.transaction('f','readwrite');t.objectStore('f').put(v,k);t.oncomplete=ok;t.onerror=()=>no(t.error)})},
+fget=async k=>{try{const d=await IDB();return await new Promise(ok=>{const r=d.transaction('f').objectStore('f').get(k);r.onsuccess=()=>ok(r.result);r.onerror=()=>ok(null)})}catch(e){return null}},
+fall=async()=>{try{const d=await IDB();return await new Promise(ok=>{const o={},r=d.transaction('f').objectStore('f').openCursor();r.onsuccess=()=>{const c=r.result;if(c){o[c.key]=c.value;c.continue()}else ok(o)};r.onerror=()=>ok(o)})}catch(e){return{}}},
+comp=f=>new Promise((ok,no)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const k=Math.min(1,1280/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.65))};i.onerror=no;i.src=u});
+// Datos: cl clientes, bu bultos, mv movimientos, au autorizados, tr transportistas, li liberaciones vigentes, lg registro de liberaciones/pagos, fk fotos ya respaldadas, op operador
+const emp=()=>({v:'',cl:[],bu:[],mv:[],au:[],tr:[],li:{},lg:[],fk:[],op:'',bk:0,bt:0,n:0});
+// Completa campos que falten (respaldos antiguos) y deja los identificadores como texto
+function norm(s){s={...emp(),...s};
+ ['cl','bu','mv','au','tr','lg','fk'].forEach(k=>{if(!Array.isArray(s[k]))s[k]=[]});
+ if(!s.li||typeof s.li!='object'||Array.isArray(s.li))s.li={};
+ s.cl.forEach(c=>c.id=String(c.id));s.bu.forEach(b=>{b.id=String(b.id);b.c=String(b.c)});s.mv.forEach(m=>{m.b=String(m.b);if(m.c!=null)m.c=String(m.c)});
+ s.n=s.mv.reduce((a,m)=>Math.max(a,+m.id||0),+s.n||0);return s}
+function test(){const s=emp();s.v='PRUEBA';
+ [['a','A con deuda',100000],['b','B 20 bultos',null],['c','C saldo a favor',-5000]].forEach(([id,n,v])=>s.cl.push({id,n:'PRUEBA '+n,e:'',rut:'',tel:'',mail:'',s:v}));
+ const b=(i,c,d,q,tp)=>s.bu.push({id:'T|'+i,i,c,d,tp:tp||'Bulto',q:q||1});
+ for(let i=1;i<=4;i++)b('PA'+i,'a','CAJA PRUEBA '+i);
+ for(let i=1;i<=20;i++)b('PB'+String(i).padStart(2,'0'),'b','BULTO PRUEBA '+i);
+ b('PC1','c','ENCARGO PRUEBA',5,'Encargo (cajón)');return s}
+function load(){blk=false;let raw=localStorage.getItem('cc.'+mode);S=null;
+ if(raw){try{S=norm(JSON.parse(raw))}catch(e){blk=true;alert('Los datos guardados no se pueden leer. No se guardará nada nuevo: restaura un respaldo en Más.')}}
+ if(!S)S=mode=='prueba'?test():emp()}
+function save(){if(blk)return alert('Datos ilegibles: restaura un respaldo antes de continuar.');try{localStorage.setItem('cc.'+mode,JSON.stringify(S))}catch(e){alert('No se pudo guardar. Haz un respaldo ahora.')}}
+// Copia de seguridad interna: se guarda antes de importar, restaurar o cerrar un viaje (se puede recuperar desde Más)
+function prevSave(){try{localStorage.setItem('cc.'+mode+'.prev',JSON.stringify(S))}catch(e){}}
+const U=()=>S.op?{u:S.op}:{};
+function calc(){const an=new Set(),M={},C=new Map(S.cl.map(c=>[c.id,c]));
+ S.mv.forEach(m=>{if(m.t=='a')an.add(m.ref)});S.bu.forEach(b=>M[b.id]={r:0,e:0,o:0,x:[],f:[]});
+ S.mv.forEach(m=>{if(m.t=='a'||an.has(m.id)||!M[m.b])return;const x=M[m.b];if(m.f)x.f.push(...m.f);if(m.t=='r'){x.r+=m.n;if(m.o){x.o=1;x.x.push(m.x)}}else x.e+=m.n});return{M,C,an}}
+const deu=c=>c.s>0||c.k,libOk=c=>{const l=S.li[c.id];return !!l&&l.s===(c.s??null)};
+function db(c){if(deu(c))return libOk(c)?['Deuda liberada','a']:['DEUDA '+(c.s>0?mo(c.s):'por confirmar pago'),'r'];
+ if(c.vf)return['Sin registro: verificar','a'];if(c.s<0)return['Saldo a favor '+mo(c.s),'b'];return['Sin deuda','g']}
+const st=(b,x)=>x.o?['Con obs.','a']:x.r==0?['Pendiente','n']:x.r<b.q?['Parcial '+x.r+'/'+b.q,'a']:x.r>b.q?['Excede '+x.r+'/'+b.q,'r']:['Recibido','g'];
+const P=(t,c)=>`<span class="p ${c}">${h(t)}</span>`;
+const CP=f=>f&&f.length?`<button class="bt s" style="min-height:36px;width:auto;display:inline-block;padding:6px 14px;margin:6px 0" data-a="fo" data-i="${f.join(',')}">📎 ${f.length}</button>`:'',
+CLIP=()=>'<label class="bt s">📎 Adjuntar fotos<input type="file" accept="image/*" multiple hidden data-f="ph"></label><div id="th"></div>',
+TH=()=>{const e=$('#th');if(e)e.innerHTML=pf.map((s,i)=>`<span style="position:relative;display:inline-block;margin:4px"><img src="${s}" style="width:72px;height:72px;object-fit:cover;border-radius:8px"><b data-a="rf" data-i="${i}" style="position:absolute;top:-6px;right:-6px;background:var(--r);color:#fff;border-radius:99px;width:26px;height:26px;text-align:center;line-height:26px">×</b></span>`).join('')};
+async function ph(t){for(const f of t.files){try{pf.push(await comp(f))}catch(e){alert('No se pudo leer una de las fotos.')}}t.value='';TH()}
+async function sv(){const ks=[];for(const s of pf){const k=mode+'|'+Date.now()+'-'+Math.random().toString(36).slice(2,6);await fput(k,s);ks.push(k)}return ks}
+const V={
+i(){const{M}=calc();let t=0,r=0,pe=0,en=0,pd=0,ob=[];
+ S.bu.forEach(b=>{const x=M[b.id];t+=b.q;r+=x.r;pe+=Math.max(b.q-x.r,0);en+=x.e;pd+=x.r-x.e;if(x.o)ob.push([b,x])});
+ const T=(n,l,c)=>`<div class="t ${c}"><b>${n}</b><span>${l}</span></div>`,sb=S.mv.length-S.bk,hr=S.bt?(Date.now()-S.bt)/36e5:0,warn=sb>0&&(!S.bt||hr>=12||sb>=15);
+ return(S.bu.length?'':'<div class="c">Sin datos. Ve a <b>Más</b> para importar el paquete de datos o activar el modo prueba.</div>')+
+ (warn?`<div class="bn a">⚠️ ${S.bt?'Hace '+Math.floor(hr)+' h sin respaldar':'Todavía no hay ningún respaldo'} · ${sb} movimientos sin respaldar<button class="bt" data-a="bk">Respaldar ahora</button></div>`:'')+
+ `<div class="gd">${T(t,'Manifestados','n')}${T(r,'Recibidos','g')}${T(pe,'Pendientes de recepción','n')}${T(en,'Entregados','b')}${T(pd,'Pendientes de retiro','a')}${T(ob.length,'Con observaciones','r')}</div>
+ <div class="c" ${warn?'style="border-color:var(--a)"':''}><small>Último respaldo: ${S.bt?fd(S.bt):'nunca'} · ${sb} movimientos sin respaldar</small></div>`+
+ ob.slice(0,30).map(([b,x])=>`<div class="c"><b>${h(b.i)}</b> · ${h(b.d)}<br><small>${h((S.cl.find(c=>c.id==b.c)||{}).n)}</small><br>${P(x.x.join('; '),'a')}${CP(x.f)}</div>`).join('')},
+r(){const{M}=calc(),n=S.bu.filter(b=>M[b.id].r>0).length,np=S.bu.filter(b=>M[b.id].r<b.q).length;return`<div class="gd"><button class="bt ${rs=='p'?'':'s'}" data-a="rs" data-i="p">Por recibir (${np})</button><button class="bt ${rs=='o'?'':'s'}" data-a="rs" data-i="o">Recibidos (${n})</button></div><input id="q" class="in" placeholder="Buscar cliente, referencia, descripción o bulto" value="${h(q)}" autocomplete="off"><div id="l"></div>`},
+e:()=>`<div class="gd"><button class="bt ${es=='l'?'':'s'}" data-a="es" data-i="l">Con carga lista</button><button class="bt ${es=='t'?'':'s'}" data-a="es" data-i="t">Todos los clientes</button></div><input id="q" class="in" placeholder="Buscar cliente" value="${h(q)}" autocomplete="off"><div id="l"></div>`,
+h:()=>`<input id="q" class="in" placeholder="Buscar en el historial (cliente, bulto, persona)" value="${h(q)}" autocomplete="off"><div id="l"></div>`,
+m(){const hp=!!localStorage.getItem('cc.'+mode+'.prev');return`<div class="c"><b>${mode=='prueba'?'MODO PRUEBA':'Datos reales'}</b> · viaje ${h(S.v||'—')}<br><small>${S.bu.length} bultos · ${S.cl.length} clientes · ${S.mv.length} movimientos</small></div>
+<div class="c"><b>Operador</b><br><small>Tu nombre queda anotado en cada recepción, entrega y anulación que registres.</small><input class="in" data-p="op" placeholder="Nombre de quien registra" value="${h(S.op)}" autocomplete="off"></div>
+<label class="bt">Importar paquete de datos<input type="file" accept=".json" hidden data-f="imp"></label>
+<button class="bt" data-a="bk">Respaldar ahora</button>
+<label class="bt s">Restaurar respaldo<input type="file" accept=".json" multiple hidden data-f="res"></label>
+<small>El respaldo genera un archivo de datos y, aparte, las fotos nuevas. Para restaurar elige el archivo de datos y, si quieres, también los de fotos (puedes elegir varios a la vez).</small>
+<button class="bt s" data-a="csv">Exportar a Excel (CSV)</button>
+<div class="c"><b>Personas autorizadas para liberar deudas</b>${S.au.map(a=>'<div>'+h(a.n)+'</div>').join('')||'<br><small>Ninguna todavía</small>'}
+<input id="an" class="in" placeholder="Nombre"><input id="ap" class="in" type="password" inputmode="numeric" placeholder="PIN nuevo (mínimo 4)"><button class="bt s" data-a="aa">Agregar</button></div>
+<div class="c"><b>Liberaciones y pagos confirmados</b>${S.lg.length?S.lg.slice(-15).reverse().map(g=>`<div style="margin:6px 0"><small>${fd(g.ts)} · ${g.t=='p'?'Pago confirmado':'Liberación'} · ${h(g.n)}</small><br>${h(g.p)}: ${h(g.m)}</div>`).join(''):'<br><small>Ninguna todavía</small>'}</div>
+<button class="bt ${mode=='prueba'?'':'s'}" data-a="mode">${mode=='prueba'?'Volver a datos reales':'Activar modo prueba'}</button>${mode=='prueba'?'<button class="bt s" data-a="rst">Reiniciar datos de prueba</button>':''}
+${hp?'<button class="bt s" data-a="prev">Recuperar copia anterior</button><small>La app guarda una copia antes de importar, restaurar o cerrar un viaje.</small>':''}
+${mode=='real'?'<button class="bt s" data-a="cierre">Cerrar viaje y empezar uno nuevo</button>':''}
+<div class="c"><small>Versión de la app: ${VER}</small><button class="bt s" data-a="upd">Buscar actualización</button>
+<small>iPhone: la app instalada en la pantalla de inicio guarda sus datos aparte de Safari. Si cargaste datos desde Safari antes de instalarla, respáldalos allá y restáuralos aquí.</small></div>`}};
+function L(){const l=$('#l');if(!l)return;const{M,C}=calc(),k=nz(q).split(/\s+/).filter(Boolean),ok=H=>k.every(w=>H.includes(w));let a,n;
+ if(tab=='r'&&rs=='o'){const G={};S.bu.forEach(b=>{const x=M[b.id];if(x.r<=0)return;const c=C.get(b.c)||{};if(!ok(nz([b.i,b.d,c.n,c.e].join(' '))))return;const g=G[b.c]??={c,t:0,d:0,o:0};g.t++;g.d+=x.r-x.e;g.o+=x.o});a=Object.entries(G).sort((x,y)=>String(x[1].c.n).localeCompare(String(y[1].c.n)));n=a.length;l.innerHTML=a.slice(0,40).map(([id,g])=>{const d=db(g.c);return`<div class="c rw" data-a="fi" data-i="${h(id)}"><span><b>${h(g.c.n)}</b><br><small>${g.t} bultos recibidos · ${g.d} por entregar${g.o?' · '+g.o+' con obs.':''}</small></span><span>${P(d[0],d[1])}</span></div>`}).join('')}else if(tab=='r'){a=S.bu.filter(b=>{const c=C.get(b.c)||{};return M[b.id].r<b.q&&ok(nz([b.i,b.d,c.n,c.e,c.rut,b.pat].join(' ')))}).sort((x,y)=>(M[x.id].r>0)-(M[y.id].r>0));n=a.length;
+  l.innerHTML=a.slice(0,40).map(b=>{const x=M[b.id],s=st(b,x);return`<div class="c rw" data-a="ob" data-i="${h(b.id)}"><span><b>${h(b.i)}</b> · ${h(b.d)}<br><small>${h((C.get(b.c)||{}).n)}</small></span><span>${P(s[0],s[1])}${x.e?'<br>'+P('Entregado '+x.e,'b'):''}</span></div>`}).join('')}
+ else if(tab=='e'){const D={};S.bu.forEach(b=>D[b.c]=(D[b.c]||0)+M[b.id].r-M[b.id].e);
+  a=S.cl.filter(c=>ok(nz([c.n,c.e,c.rut].join(' ')))&&(q.trim()||es=='t'||D[c.id]>0)).sort((x,y)=>(D[y.id]||0)-(D[x.id]||0)||x.n.localeCompare(y.n));n=a.length;
+  l.innerHTML=a.slice(0,40).map(c=>{const d=db(c);return`<div class="c rw" data-a="cv" data-i="${h(c.id)}"><span><b>${h(c.n)}</b><br><small>${h(c.e)}${D[c.id]?' · '+D[c.id]+' disponibles':' · nada disponible'}</small></span>${P(d[0],d[1])}</div>`}).join('')}
+ else if(tab=='h'){const B=new Map(S.bu.map(b=>[b.id,b])),an=calc().an;
+  a=S.mv.slice().reverse().filter(m=>{const b=B.get(m.b)||{};return ok(nz([b.i,b.d,(C.get(b.c)||{}).n,m.q,m.tr,m.x,m.u].join(' ')))});n=a.length;
+  l.innerHTML=a.slice(0,60).map(m=>{const b=B.get(m.b)||{},x=an.has(m.id),t={r:'Recepción',e:'Entrega',a:'Anulación'}[m.t],
+   b1=m.t!='a'&&!x?`<button class="bt s" style="min-height:40px;margin:6px 0 0" data-a="an" data-i="${m.id}">Anular</button>`:'',
+   b2=m.t=='e'&&!x?`<button class="bt s" style="min-height:40px;margin:6px 0 0" data-a="cp" data-i="${m.id}">Comprobante</button>`:'';
+   return`<div class="c"><div class="rw"><small>${fd(m.ts)} · #${m.id}${m.u?' · '+h(m.u):''}</small>${P(t+(x?' (anulada)':''),m.t=='e'?'b':m.t=='a'?'r':'g')}</div><div ${x?'style="opacity:.5;text-decoration:line-through"':''}><b>${h(b.i)}</b> · ${h(b.d)}<br><small>${h((C.get(b.c)||{}).n)}</small>${m.t!='a'?'<br>Cantidad: <b>'+m.n+'</b>':''}${m.q?'<br>Retira: '+h(m.q)+(m.tr?' (transportista '+h(m.tr)+')':' (cliente)'):''}${m.x?'<br><small>'+h(m.x)+'</small>':''}</div>${CP(m.f)}${b1||b2?`<div ${b1&&b2?'class="gd"':''}>${b2}${b1}</div>`:''}</div>`}).join('')}
+ if(n>(tab=='h'?60:40))l.innerHTML+=`<small>Mostrando ${tab=='h'?60:40} de ${n}. Escribe más para afinar.</small>`;
+ if(!n)l.innerHTML=tab=='e'&&es=='l'&&!q.trim()?'<div class="c">Todavía no hay carga recibida lista para entregar. Registra recepciones en <b>Recepción</b> o toca <b>Todos los clientes</b>.</div>':tab=='r'&&rs=='p'&&!q.trim()?'<div class="c">✔ No queda nada por recibir.</div>':'<small>Sin resultados.</small>'}
+function CV(){const{M,C}=calc(),c=C.get(dc),bs=S.bu.filter(b=>b.c==dc),av=bs.filter(b=>M[b.id].r-M[b.id].e>0),lock=deu(c)&&!libOk(c),d=db(c),l=S.li[c.id],kp=c.k&&!(c.s>0);
+ return`<button class="bt s" data-a="back">← Clientes</button><div class="c"><h3>${h(c.n)}</h3>${c.e?'<small>'+h(c.e)+'</small><br>':''}<small>${h(c.rut)}</small><br>
+ ${c.tel?'<a href="tel:'+h(c.tel)+'">'+h(c.tel)+'</a> ':'<small>Sin teléfono</small> '}${c.mail?'· '+h(c.mail):''}</div>
+ ${lock?`<div class="bn r">${h(d[0])} — ENTREGA BLOQUEADA</div>${kp?'<button class="bt" data-a="pag">Confirmar pago recibido (persona autorizada)</button>':''}<button class="bt ${kp?'s':''}" data-a="lib">Liberar (persona autorizada)</button>`:deu(c)?`<div class="bn a">Deuda liberada por ${h(l.p)} (${fd(l.ts)}): ${h(l.m)}</div>${kp?'<button class="bt s" data-a="pag">Confirmar pago recibido (persona autorizada)</button>':''}`:`<div class="bn ${d[1]}">${h(d[0])}</div>`}
+ <small>Deuda según listado importado. ${bs.filter(b=>M[b.id].r==0).length} bultos sin recibir · ${bs.length-av.length-bs.filter(b=>M[b.id].r==0).length} ya entregados.</small>
+ ${av.map(b=>{const x=M[b.id],q=x.r-x.e;return`<label class="c rw"><span><b>${h(b.i)}</b> · ${h(b.d)}${b.pat?' · '+h(b.pat):''}<br><small>Recibido ${x.r} · Entregado ${x.e} · <b>Disponible ${q}</b></small>${x.o?'<br>'+P('OBS: '+x.x.join('; '),'a'):''}${CP(x.f)}</span>${q>1?`<input type="number" class="nm" min="0" max="${q}" value="${sel[b.id]||0}" data-s="${h(b.id)}">`:`<input type="checkbox" data-s="${h(b.id)}" ${sel[b.id]?'checked':''}>`}</label>`}).join('')||'<div class="c">No hay bultos recibidos disponibles para entregar.</div>'}
+ <button class="bt s" data-a="all">Seleccionar todos los disponibles</button>
+ <div class="c rd"><label><input type="radio" name="via" value="c" checked>Retira el propio cliente</label><label><input type="radio" name="via" value="t">Retira un transportista</label>
+ <input id="tr" class="in" list="trl" placeholder="Transportista (elige o escribe uno nuevo)"><datalist id="trl">${S.tr.map(t=>'<option value="'+h(t)+'">').join('')}</datalist>
+ <input id="qn" class="in" placeholder="Nombre de quien retira"><textarea id="ob" class="in" placeholder="Observaciones"></textarea>${CLIP()}</div>
+ <button class="bt" data-a="ent" ${lock?'disabled':''}>Registrar entrega (<span id="ns">0</span> bultos)</button>`}
+const mdB=id=>{const b=S.bu.find(b=>b.id==id),{M,C}=calc(),x=M[id],c=C.get(b.c)||{},hi=S.mv.filter(m=>m.b==id&&m.t!='a');
+ return`<div class="mo"><div class="sh"><h3>${h(b.i)}</h3><div>${h(b.d)}</div><small>${h(c.n)} · ${h(b.tp||'Bulto')}${b.pat?' · '+h(b.pat):''} · ingreso ${h(b.f||'—')}</small>
+ <div class="c">${c.tel?`<a href="tel:${h(c.tel)}">📞 ${h(c.tel)}</a>`:'<small>Cliente sin teléfono</small>'} · <u data-a="fi" data-i="${h(b.c)}">Ver ficha del cliente</u></div><div class="c">Manifestado <b>${b.q}</b> · Recibido <b>${x.r}</b> · Entregado <b>${x.e}</b></div>
+ <input id="nn" class="in" type="number" inputmode="numeric" min="1" value="${Math.max(b.q-x.r,0)||1}"><small>Cantidad que se recibe ahora</small>
+ <div class="rd"><label><input type="radio" name="es" value="ok" checked>Recibido</label><label><input type="radio" name="es" value="o">Recibido con observaciones</label></div>
+ <textarea id="ob" class="in" placeholder="Observaciones (daños, bulto abierto, diferencias…)"></textarea>${CLIP()}
+ <button class="bt" data-a="reg">Registrar recepción</button><button class="bt s" data-a="x">Cerrar</button>
+ ${hi.map(m=>`<small>${fd(m.ts)} · ${m.t=='r'?'recibió '+m.n:'entregó '+m.n}${m.x?' · '+h(m.x):''}</small>${CP(m.f)}<br>`).join('')}</div></div>`};
+const mdF=id=>{const{M,C}=calc(),c=C.get(id)||{n:'?'},bs=S.bu.filter(b=>b.c==id&&M[b.id].r>0),d=db(c);return`<div class="mo"><div class="sh"><h3>${h(c.n)}</h3>${c.e?'<small>'+h(c.e)+'</small><br>':''}${P(d[0],d[1])}<div class="c">${c.tel?`<a class="bt" href="tel:${h(c.tel)}">📞 Llamar ${h(c.tel)}</a><a class="bt s" href="https://wa.me/${h(String(c.tel).replace(/[^0-9]/g,''))}">WhatsApp</a>`:'<b>Sin teléfono registrado</b>'}${c.mail?`<a class="bt s" href="mailto:${h(c.mail)}">${h(c.mail)}</a>`:'<small>Sin correo</small>'}</div>${bs.map(b=>{const x=M[b.id];return`<div class="c"><b>${h(b.i)}</b> · ${h(b.d)}<br><small>Recibido ${x.r} · Entregado ${x.e}</small>${x.o?' '+P('OBS: '+x.x.join('; '),'a'):''}${CP(x.f)}</div>`}).join('')}<button class="bt" data-a="toE" data-i="${h(id)}">Ir a Entrega de este cliente</button><button class="bt s" data-a="x">Cerrar</button></div></div>`};
+const mdL=m=>{const p=m=='pag';return`<div class="mo"><div class="sh"><h3>${p?'Confirmar pago recibido':'Liberar entrega con deuda'}</h3>${S.au.length?`<select id="au" class="in">${S.au.map((a,i)=>`<option value="${i}">${h(a.n)}</option>`).join('')}</select><input id="pn" class="in" type="password" inputmode="numeric" placeholder="PIN"><textarea id="mt" class="in" placeholder="${p?'Detalle del pago (monto, fecha, medio)':'Motivo de la liberación'}"></textarea><button class="bt" data-a="lok" data-i="${m}">${p?'Confirmar pago':'Liberar'}</button>`:'<p>Primero crea una persona autorizada en <b>Más</b>.</p>'}<button class="bt s" data-a="x">Cancelar</button></div></div>`};
+// Comprobante de entrega: texto para enviar por WhatsApp o guardar
+function cpTxt(id){const m0=S.mv.find(m=>m.id==id),{C,an}=calc(),B=new Map(S.bu.map(b=>[b.id,b])),c=C.get(m0.c)||{},its=S.mv.filter(m=>m.t=='e'&&m.ts==m0.ts&&m.c==m0.c&&!an.has(m.id));
+ const L=['ENTREGA DE CARGA'+(S.v&&S.v!='PRUEBA'?' · viaje '+S.v:''),'Fecha: '+fd(m0.ts),'Cliente: '+(c.n||'?'),'Retira: '+m0.q+(m0.tr?' (transportista '+m0.tr+')':' (cliente)'),'','Bultos entregados:',...its.map(m=>{const b=B.get(m.b)||{};return'• '+(b.i||'?')+' · '+(b.d||'')+' × '+m.n})];
+ if(m0.x)L.push('','Obs.: '+m0.x);if(m0.u)L.push('','Registró: '+m0.u);return{t:L.join('\n'),c}}
+const mdC=()=>{const c=cpt.c,t=cpt.t;return`<div class="mo"><div class="sh"><h3>Comprobante de entrega</h3><small>Para enviar al cliente o guardar</small><pre class="cp">${h(t)}</pre>${c.tel?`<a class="bt" href="https://wa.me/${h(String(c.tel).replace(/[^0-9]/g,''))}?text=${encodeURIComponent(t)}">Enviar por WhatsApp al cliente</a>`:''}<button class="bt s" data-a="csh">Compartir…</button><button class="bt s" data-a="ccp">Copiar texto</button><button class="bt s" data-a="x">Cerrar</button></div></div>`};
+// Respaldo: un archivo de datos + archivos de fotos aparte (solo las que aún no se habían respaldado)
+async function mkBk(){const t=new Date().toISOString().slice(0,16).replace(/[:T-]/g,''),F=await fall(),ks=Object.keys(F).filter(k=>k.startsWith(mode+'|')&&!S.fk.includes(k)),fk=S.fk.concat(ks),
+ fs=[[JSON.stringify({...S,fk,bk:S.mv.length,bt:Date.now()}),'respaldo-carga-'+mode+'-'+t+'.json']];
+ for(let i=0;i<ks.length;i+=80){const Q={};ks.slice(i,i+80).forEach(k=>Q[k]=F[k]);fs.push([JSON.stringify({_t:'fotos',_f:Q}),'fotos-carga-'+mode+'-'+t+'-'+(i/80+1)+'.json'])}
+ return{fs,ks,fk,t}}
+async function out(fs){const F=fs.map(([t,n,ty])=>new File([t],n,{type:ty||'application/json'}));
+ try{if(navigator.canShare&&navigator.canShare({files:F})){await navigator.share({files:F,title:F[0].name});return 1}}catch(e){if(e.name=='AbortError')return 0}
+ for(const f of F){const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;a.click();await new Promise(r=>setTimeout(r,400))}return 1}
+const G=async f=>{if(busy)return;busy=1;const bs=[...document.querySelectorAll('[data-a=reg],[data-a=ent]')].filter(b=>!b.disabled);bs.forEach(b=>b.disabled=true);try{await f()}finally{busy=0;bs.forEach(b=>b.disabled=false)}};
+function clM(){if(mk=='b'||mk=='f'){pf=[];cur=null}md='';mk=''}
+function dback(){dc=null;sel={};pf=[]}
+const A={
+tab(k){tab=k;q='';dc=null;cur=null;md='';mk='';sel={};pf=[];$('#md2').innerHTML='';R()},
+x(){clM();RM()},x2(){$('#md2').innerHTML='';syncH()},
+ob(i){cur=i;pf=[];md=mdB(i);mk='b';RM()},cv(i){dc=i;sel={};pf=[];R()},back(){dback();R()},
+lib(){md=mdL('lib');mk='l';RM()},pag(){md=mdL('pag');mk='l';RM()},
+rs(k){rs=k;q='';R()},es(k){es=k;q='';R()},
+fi(i){const had=!!md;pf=[];cur=null;md=mdF(i);mk='f';had?RM():R()},
+toE(i){tab='e';dc=i;sel={};pf=[];q='';md='';mk='';cur=null;$('#md2').innerHTML='';R()},
+rf(i){pf.splice(+i,1);TH()},
+async fo(ks){$('#md2').innerHTML='<div class="mo"><div class="sh" id="ph"><small>Cargando…</small></div></div>';syncH();const a=await Promise.all(ks.split(',').map(fget)),e=$('#ph');if(e)e.innerHTML=a.map(s=>s?`<img src="${s}" style="width:100%;border-radius:10px;margin:6px 0">`:'<div class="c">Foto no disponible en este equipo.</div>').join('')+'<button class="bt s" data-a="x2">Cerrar</button>'},
+async reg(){return G(async()=>{const b=S.bu.find(b=>b.id==cur);if(!b)return;const x=calc().M[cur],n=parseInt($('#nn').value),o=document.querySelector('[name=es]:checked').value=='o',ob=$('#ob').value.trim();
+ if(!(n>0))return alert('Cantidad inválida.');if(o&&!ob)return alert('Describe la observación.');
+ if(x.r+n>b.q&&!confirm('Esto supera lo manifestado ('+b.q+'). ¿Registrar igual?'))return;
+ let f;try{f=await sv()}catch(e){return alert('No se pudieron guardar las fotos. No se registró la recepción.')}
+ S.mv.push({id:++S.n,t:'r',b:cur,n,o:o?1:0,x:ob,...U(),ts:Date.now(),...(f.length?{f}:{})});save();pf=[];md='';mk='';cur=null;R();toast('Recepción registrada')})},
+all(){const{M}=calc();S.bu.filter(b=>b.c==dc).forEach(b=>{const d=M[b.id].r-M[b.id].e;if(d>0)sel[b.id]=d});document.querySelectorAll('[data-s]').forEach(e=>{const v=sel[e.dataset.s]||0;if(e.type=='checkbox')e.checked=!!v;else e.value=v});SU()},
+async ent(){return G(async()=>{const{M,C}=calc(),c=C.get(dc);if(!c)return;if(deu(c)&&!libOk(c))return alert('Entrega bloqueada por deuda.');
+ const via=document.querySelector('[name=via]:checked').value,tr=$('#tr').value.trim(),qn=$('#qn').value.trim(),ob=$('#ob').value.trim(),it=Object.entries(sel).filter(([,n])=>n>0);
+ if(!it.length)return alert('Selecciona los bultos que se entregan.');if(!qn)return alert('Indica quién retira.');if(via=='t'&&!tr)return alert('Indica el transportista.');
+ for(const[id,n]of it){const x=M[id];if(!x||n>x.r-x.e)return alert('Hay una cantidad mayor a la disponible.')}
+ const B=new Map(S.bu.map(b=>[b.id,b])),ls=it.map(([id,n])=>'• '+((B.get(id)||{}).i||'?')+' × '+n);
+ if(!confirm('Entregar a '+c.n+'\nRetira: '+qn+(via=='t'?' (transportista '+tr+')':' (cliente)')+'\n\n'+ls.slice(0,12).join('\n')+(ls.length>12?'\n… y '+(ls.length-12)+' más':'')+'\n\n¿Registrar entrega?'))return;
+ let f;try{f=await sv()}catch(e){return alert('No se pudieron guardar las fotos. No se registró la entrega.')}
+ const ts=Date.now(),id0=S.n+1;it.forEach(([id,n])=>S.mv.push({id:++S.n,t:'e',b:id,n,c:dc,v:via,tr:via=='t'?tr:'',q:qn,x:ob,...U(),ts,...(f.length?{f}:{})}));
+ if(via=='t'&&!S.tr.includes(tr))S.tr.push(tr);save();sel={};pf=[];cpt=cpTxt(id0);md=mdC();mk='c';R();toast('Entrega registrada')})},
+cp(i){cpt=cpTxt(i);md=mdC();mk='c';RM()},
+csh(){if(navigator.share)navigator.share({text:cpt.t}).catch(()=>{});else A.ccp()},
+ccp(){if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(cpt.t).then(()=>toast('Texto copiado'),()=>alert('No se pudo copiar.'));else alert('Este equipo no permite copiar desde aquí.')},
+lok(m){const a=S.au[$('#au').value],mt=$('#mt').value.trim(),c=calc().C.get(dc),p=m=='pag';
+ if(!a||hs($('#pn').value)!=a.p)return alert('PIN incorrecto.');if(!mt)return alert(p?'Escribe el detalle del pago.':'Escribe el motivo.');
+ const ts=Date.now();if(p)delete c.k;else S.li[dc]={p:a.n,m:mt,ts,s:c.s??null};
+ S.lg.push({t:p?'p':'l',c:dc,n:c.n,p:a.n,m:mt,ts,s:c.s??null});save();md='';mk='';R();toast(p?'Pago confirmado':'Entrega liberada')},
+an(i){const m=S.mv.find(m=>m.id==i),x=calc().M[m.b];if(m.t=='r'&&x.r-m.n<x.e)return alert('Primero anula las entregas de este bulto.');
+ const mt=prompt('Motivo de la anulación:');if(!mt)return;S.mv.push({id:++S.n,t:'a',ref:m.id,b:m.b,x:mt,...U(),ts:Date.now()});save();R()},
+async bk(){const B=await mkBk();if(await out(B.fs)){S.fk=B.fk;S.bk=S.mv.length;S.bt=Date.now();save();R();toast('Respaldo generado'+(B.ks.length?' · '+B.ks.length+' fotos nuevas':''))}},
+async csv(){const{M,C,an}=calc(),Bm=new Map(S.bu.map(b=>[b.id,b])),E=v=>{v=String(v??'');return/[;"\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v},row=a=>a.map(E).join(';'),
+ t=new Date().toISOString().slice(0,16).replace(/[:T-]/g,''),vv=String(S.v||'sin-viaje').replace(/[^\w-]/g,''),BOM='\ufeff';
+ const r1=[row(['Viaje','Cliente','Entidad','RUT','Referencia','Descripción','Tipo','Manifestado','Recibido','Entregado','Por retirar','Con observación','Observaciones','Deuda del cliente'])].concat(S.bu.map(b=>{const x=M[b.id],c=C.get(b.c)||{};return row([S.v,c.n,c.e,c.rut,b.i,b.d,b.tp,b.q,x.r,x.e,x.r-x.e,x.o?'Sí':'',x.x.join(' | '),c.n?db(c)[0]:''])}));
+ const r2=[row(['Fecha','Tipo','Referencia','Descripción','Cliente','Cantidad','Retira','Transportista','Observaciones','Registró','Anulada'])].concat(S.mv.map(m=>{const b=Bm.get(m.b)||{},c=C.get(m.c||b.c)||{};return row([new Date(m.ts).toLocaleString('es-CL'),{r:'Recepción',e:'Entrega',a:'Anulación'}[m.t],b.i,b.d,c.n,m.t=='a'?'':m.n,m.q,m.tr,m.x,m.u,m.t!='a'&&an.has(m.id)?'Sí':''])}));
+ if(await out([[BOM+r1.join('\r\n'),'bultos-'+vv+'-'+t+'.csv','text/csv'],[BOM+r2.join('\r\n'),'movimientos-'+vv+'-'+t+'.csv','text/csv']]))toast('Archivos generados')},
+async cierre(){if(mode!='real')return;if(!S.bu.length)return alert('No hay datos que cerrar.');const{M}=calc();let pe=0,pr=0;S.bu.forEach(b=>{const x=M[b.id];pe+=Math.max(b.q-x.r,0);pr+=x.r-x.e});
+ if(!confirm('CERRAR VIAJE '+(S.v||'')+'\n\nHay '+pe+' bultos sin recibir y '+pr+' recibidos sin retirar.\n\nSe generan un respaldo completo y un Excel (CSV) y luego la app queda vacía para el próximo viaje. Se mantienen las personas autorizadas, los transportistas y el operador.\n\n¿Continuar?'))return;
+ const B=await mkBk(),{M:M2,C,an}=calc();const vv=String(S.v||'sin-viaje').replace(/[^\w-]/g,'');
+ if(!await out(B.fs))return;
+ if(!confirm('¿Guardaste los archivos en un lugar seguro (Archivos, iCloud, correo)?\n\nAl aceptar se vacía el viaje actual. Podrás deshacerlo desde Más → «Recuperar copia anterior» hasta la próxima importación.'))return;
+ prevSave();S=norm({au:S.au,tr:S.tr,op:S.op,fk:B.fk});save();tab='i';dc=null;cur=null;md='';mk='';$('#md2').innerHTML='';R();toast('Viaje cerrado. Importa el siguiente.')},
+prev(){const raw=localStorage.getItem('cc.'+mode+'.prev');if(!raw)return;if(!confirm('¿Volver a la copia anterior? Lo registrado desde entonces se perderá (la situación actual quedará guardada por si te arrepientes).'))return;
+ try{const Pv=norm(JSON.parse(raw)),now=JSON.stringify(S);localStorage.setItem('cc.'+mode+'.prev',now);S=Pv;blk=false;save();R();toast('Copia anterior recuperada')}catch(e){alert('No se pudo recuperar la copia.')}},
+async upd(){if(!navigator.onLine)return alert('Sin conexión: no se puede buscar una actualización. La app sigue funcionando.');
+ try{const r=await fetch('index.html',{cache:'no-store'});if(!r.ok)throw 0;for(const k of await caches.keys()){if(k.startsWith('cc-')){const c=await caches.open(k);await c.put('index.html',r.clone());await c.put('./',r.clone())}}const g=await navigator.serviceWorker.getRegistration();if(g)await g.update();location.reload()}catch(e){alert('No se pudo actualizar. La app sigue funcionando con la versión actual.')}},
+aa(){const n=$('#an').value.trim(),p=$('#ap').value;if(!n||p.length<4)return alert('Nombre y PIN de 4 o más caracteres.');S.au.push({n,p:hs(p)});save();R()},
+mode(){mode=mode=='prueba'?'real':'prueba';localStorage.setItem('cc.mode',mode);load();tab='i';dc=null;cur=null;md='';mk='';sel={};pf=[];$('#md2').innerHTML='';R()},
+rst(){if(confirm('¿Borrar los datos de prueba y empezar de nuevo?')){S=test();save();R()}}};
+function IMP(D){if(!D.clientes||!D.bultos)throw 0;
+ if(S.v&&D.viaje&&String(D.viaje)!=String(S.v)&&!confirm('Este paquete es del viaje '+D.viaje+' y la app tiene datos del viaje '+S.v+'.\nSi el viaje anterior ya terminó, conviene usar «Cerrar viaje» en Más.\n\n¿Importar igual y mezclarlo con lo actual?'))return;
+ D.clientes.forEach(c=>c.id=String(c.id));D.bultos.forEach(b=>{b.id=String(b.id);b.c=String(b.c)});
+ prevSave();const{M}=calc(),C=new Map(S.cl.map(c=>[c.id,c])),B=new Map(S.bu.map(b=>[b.id,b]));let na=0,nu=0,nk=0;
+ D.clientes.forEach(c=>{const o=C.get(c.id);if(o){const pv=o.s??null;Object.assign(o,c);if(pv>0&&!(c.s>0))o.k=1}else S.cl.push(c)});
+ D.bultos.forEach(b=>{const o=B.get(b.id);if(!o){S.bu.push(b);na++}else if(!M[b.id]||(M[b.id].r==0&&M[b.id].e==0)){Object.assign(o,b);nu++}else nk++});
+ if(!S.v)S.v=D.viaje;save();R();alert(`Importado: ${na} bultos nuevos, ${nu} actualizados, ${nk} con movimientos (no se tocaron). Los movimientos existentes se conservan.`)}
+async function RES(D){if(!D.bu||!D.mv)throw 0;
+ if(mode=='real'&&D.v=='PRUEBA')return alert('Ese respaldo es de datos de PRUEBA y estás en datos reales. No se restauró nada.');
+ if(mode=='prueba'&&D.v!='PRUEBA')return alert('Ese respaldo es de datos reales y estás en modo prueba. No se restauró nada.');
+ if(!confirm('Esto reemplaza TODOS los datos actuales por el respaldo. ¿Continuar?'))return;
+ const Q=D._f||{};delete D._f;delete D._t;for(const k in Q)await fput(k,Q[k]);prevSave();S=norm(D);blk=false;save();R();toast('Respaldo restaurado')}
+async function FILE(t){if(t.dataset.f=='ph')return ph(t);const fs=[...t.files];t.value='';if(!fs.length)return;
+ try{if(t.dataset.f=='imp')return IMP(JSON.parse(await fs[0].text()));
+  const Ds=[];for(const f of fs)Ds.push(JSON.parse(await f.text()));let np=0;
+  for(const D of Ds)if(D._t=='fotos'&&D._f)for(const k in D._f){await fput(k,D._f[k]);np++}
+  const dd=Ds.filter(D=>D._t!='fotos');if(dd.length>1)return alert('Elige un solo archivo de datos (los de fotos pueden ser varios).');
+  if(dd.length)await RES(dd[0]);if(np)toast(np+' fotos restauradas')}catch(e){alert('Archivo no válido.')}}
+function SU(){const e=$('#ns');if(e)e.textContent=Object.values(sel).filter(n=>n>0).length}
+function toast(t){const d=document.createElement('div');d.className='ts';d.textContent=t;document.body.append(d);setTimeout(()=>d.remove(),1800)}
+// Botón "atrás" del teléfono: cierra la ventana o ficha abierta en vez de salir de la app
+const layers=()=>(dc!=null?1:0)+(md?1:0)+($('#md2').innerHTML?1:0);
+// Mientras el navegador procesa un "volver" (ig>0) no se toca el historial; al terminar se reconcilia
+function syncH(){if(ig>0)return;const n=layers();if(n>hd){while(hd<n){history.pushState({cc:1},'');hd++}}else if(n<hd){const k=hd-n;hd=n;ig++;history.go(-k);setTimeout(()=>{if(ig>0){ig=0;syncH()}},1000)}}
+addEventListener('popstate',()=>{if(ig>0){ig--;if(!ig)syncH();return}hd=Math.max(0,hd-1);
+ if($('#md2').innerHTML){$('#md2').innerHTML='';syncH()}else if(md){clM();RM()}else if(dc!=null){dback();R()}else syncH()});
+// R redibuja todo; RM solo la ventana abierta (así no se pierde lo escrito en el formulario de detrás)
+function RM(){$('#md').innerHTML=md;TH();syncH()}
+function R(){$('#top').innerHTML=mode=='prueba'?'<div class="pr">MODO PRUEBA — datos de ejemplo, no son reales</div>':'';
+ $('#nv').innerHTML=[['i','Inicio'],['r','Recepción'],['e','Entrega'],['h','Historial'],['m','Más']].map(([k,l])=>`<button data-a="tab" data-i="${k}" class="${tab==k?'on':''}">${l}</button>`).join('');
+ $('#m').innerHTML=tab=='e'&&dc!=null?CV():V[tab]();$('#md').innerHTML=md;L();SU();TH();syncH()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(t&&A[t.dataset.a])A[t.dataset.a](t.dataset.i)});
+function SEL(t){sel[t.dataset.s]=t.type=='checkbox'?(t.checked?1:0):Math.max(0,Math.min(+t.max,parseInt(t.value)||0));SU()}
+document.addEventListener('input',e=>{const t=e.target;if(t.id=='q'){q=t.value;L()}else if(t.dataset.s!==undefined)SEL(t);else if(t.dataset.p=='op'&&!blk){S.op=t.value.trim();save()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.dataset.s!==undefined)SEL(t);if(t.dataset.f)FILE(t)});
+try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+load();R();
+</script></body></html>
