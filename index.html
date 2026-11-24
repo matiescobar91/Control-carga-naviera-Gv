@@ -31,11 +31,13 @@ pre.cp{white-space:pre-wrap;font:15px/1.4 -apple-system,Helvetica,Arial,sans-ser
 .ba{height:12px;border-radius:99px;background:var(--grb);overflow:hidden;margin:6px 0}.ba i{display:block;height:100%;background:var(--pri)}
 .ac{display:flex;gap:8px;margin-top:10px}.ac .bt{margin:0;min-height:48px}.ac .w{flex:0 0 62px;font-size:20px}
 .hd{cursor:pointer}.cl{margin:4px 0 10px 0;padding-left:10px;border-left:3px solid var(--bd)}
+.tb{margin-top:8px}.tr{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--bd)}.tr:first-child{border-top:0}.tr b{white-space:nowrap}
+.dn{display:flex;align-items:center;gap:8px;margin:10px 0}.dn button{flex:0 0 54px;min-height:46px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font-size:20px;font-weight:700}.dn button:disabled{opacity:.3}.dn b{flex:1;text-align:center;font-size:17px;text-transform:capitalize}
 .fl{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px}.fl button{flex:0 0 auto;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;padding:9px 14px;font-size:14px;font-weight:700}.fl button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
 </style></head><body>
 <div id="top"></div><main id="m"></main><nav id="nv"></nav><div id="md"></div><div id="md2"></div>
 <script>
-const VER='4 · 28-oct-2026';
+const VER='6 · 24-nov-2026';
 const $=s=>document.querySelector(s),h=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),
 nz=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(),
 sq=s=>nz(s).replace(/[^a-z0-9]/g,''),
@@ -44,7 +46,7 @@ fd=t=>new Date(t).toLocaleString('es-CL',{day:'2-digit',month:'2-digit',hour:'2-
 mo=n=>'$'+Math.abs(n).toLocaleString('es-CL'),
 pct=(a,b)=>b>0?Math.round(a*100/b):0;
 // Pantalla: md = ventana abierta (mk: b bulto, f ficha, l liberar/pago, v dictado, rp reporte); hd/ig = botón "atrás"
-let mode=localStorage.getItem('cc.mode')||'real',S,tab='c',q='',cur=null,md='',mk='',blk=false,fs='t',pf=[],busy=0,hd=0,ig=0,rpt='',exp={},
+let mode=localStorage.getItem('cc.mode')||'real',S,tab='c',q='',cur=null,md='',mk='',blk=false,fs='t',pf=[],busy=0,hd=0,ig=0,rpt='',exp={},rday='',rdet=0,
 voz=localStorage.getItem('cc.voz')!='0',REC=null,vzOn=0,vlog=[];
 const IDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('cc-fotos',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}),
 fput=async(k,v)=>{const d=await IDB();return new Promise((ok,no)=>{const t=d.transaction('f','readwrite');t.objectStore('f').put(v,k);t.oncomplete=ok;t.onerror=()=>no(t.error)})},
@@ -65,9 +67,11 @@ function norm(s){s={...emp(),...s};
 function test(){const s=emp();s.v='PRUEBA';
  [['gv','FERRETERIA GV PRUEBA',null,1],['a','PRUEBA A con deuda',100000,0],['b','PRUEBA B',null,0],['c','PRUEBA C saldo a favor',-5000,0]].forEach(([id,n,v,p])=>s.cl.push({id,n,e:'',rut:'',tel:'',mail:'',s:v,p}));
  const b=(i,c,d,q,tp)=>s.bu.push({id:'T|'+i,i,c,d,tp:tp||'Cajón',q:q||1});
- for(let i=1;i<=40;i++)b('GV '+(45660000+i*137),'gv','CAJON FERRETERIA '+i);
- for(let i=1;i<=7;i++)b('JP 0'+i,'a','ENCARGO JUAN PRUEBA '+i);
- for(let i=1;i<=5;i++)b('CE '+(20+i*5),'b','BULTO CAMILO PRUEBA '+i);
+ // Materiales repetidos, como en un manifiesto de verdad, para que el resumen del día agrupe igual
+ const MT=[['CEMENTO',16,'1.404 kg'],['PINO BTO IMP 2X3',10,'800 kg'],['ZINC AC 3,66 MTS',6,'2.500 kg'],['VOLCANITA RH 12,5 MM',5,'1.560 kg'],['PUERTAS',3,'1.050 kg']];
+ let n=0;MT.forEach(([m,k,p])=>{for(let i=0;i<k;i++){n++;b('GV '+(45660000+n*137),'gv',m+' · '+p)}});
+ for(let i=1;i<=7;i++)b('JP 0'+i,'a','ENCARGO JUAN PRUEBA · 300 kg');
+ for(let i=1;i<=5;i++)b('CE '+(20+i*5),'b','BULTO CAMILO PRUEBA · 150 kg');
  b('VH 7701','c','CAMIONETA PRUEBA',1,'Vehículo');s.bu[s.bu.length-1].pat='ABCD12';
  b('BB 3301','c','BIG BAG PRUEBA',3,'Big bag');return s}
 function load(){blk=false;let raw=localStorage.getItem('cc.'+mode);S=null;
@@ -119,8 +123,19 @@ function vparse(txt){
  const segs=t.split(' , ').map(s=>s.trim()).filter(Boolean),out=[];
  segs.forEach(s=>{
   const ac=/despach|salio|sale|salieron|camion|porteria|afuera/.test(s)?'d':/bajo|bajaron|abajo|muelle|descarg|llego|llegaron/.test(s)?'m':null;
-  const cods=(s.match(/[a-z]*\d{2,}[a-z0-9]*/g)||[]).filter(c=>!/^(19|20)\d\d$/.test(c)||true);
-  cods.forEach(c=>out.push({cod:c,t:ac||'m',auto:!ac}))});
+  const tk=s.match(/[a-z]*\d{2,}[a-z0-9]*/g)||[];
+  vune(tk,ac||'m').forEach(c=>out.push({cod:c,t:ac||'m',auto:!ac}))});
+ return out}
+// Un código dicho en pares ("ochenta y cuatro, noventa y dos") llega como "84 92".
+// Si un trozo solo no identifica un bulto, se prueba uniéndolo con el siguiente;
+// solo se une cuando el resultado unido cae en UN bulto, así nunca junta dos códigos buenos.
+function vune(tk,t){const un=c=>vmatch(c,t).length==1,out=[];let i=0;
+ while(i<tk.length){
+  if(un(tk[i])){out.push(tk[i]);i++;continue}
+  let hecho=0;
+  for(let k=2;k<=4&&i+k<=tk.length;k++){const j=tk.slice(i,i+k).join('');
+   if(un(j)){out.push(j);i+=k;hecho=1;break}}
+  if(!hecho){out.push(tk[i]);i++}}
  return out}
 function vmatch(cod,t){const{M}=calc(),k=sq(cod);
  let a=S.bu.filter(b=>sq(b.i).includes(k));
@@ -181,7 +196,7 @@ a(){const g=grupos(),MM=calc().M;const pri=g.L.filter(x=>x.pri),par=g.L.filter(x
   ${o?'<div class="cl">'+x.bu.map(b=>{const y=MM[b.id],s=st(b,y);return `<div class="rw" style="padding:5px 0" data-a="ob" data-i="${h(b.id)}"><span><b>${h(b.i)}</b> <small>${h(b.d)}</small></span>${P(s[0],s[1])}</div>`}).join('')+'</div>':''}</div>`};
  return `<div class="c"><div class="rw"><b>Total del buque</b><b style="font-size:26px">${pct(g.baj,g.tot)}%</b></div><div class="ba"><i style="width:${pct(g.baj,g.tot)}%"></i></div>
  <div class="g3" style="margin-top:8px">${[[g.tot-g.baj,'En barco','n'],[g.mue,'En muelle','g'],[g.des,'Despachados','b']].map(([n,l,c])=>`<div class="t ${c}"><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
- <button class="bt" data-a="rep">Generar estado de avance del día</button>
+ <button class="bt" data-a="rep">📋 Resumen del día</button>
  ${pri.map(GR).join('')}
  ${par.length?'<div class="c" style="background:none;border:0;padding:4px 0"><b>Clientes particulares</b></div>'+par.map(GR).join(''):''}
  ${g.L.length?'':'<div class="c">Sin datos. Ve a <b>Más</b> para importar el paquete del viaje o activar el modo prueba.</div>'}`},
@@ -252,17 +267,70 @@ const mdV=()=>`<div class="mo"><div class="sh"><h3>Dictar</h3>
  <button class="bt" data-a="vap">Aplicar lo dictado</button>
  <button class="bt s" data-a="x">Cerrar</button>
  ${vlog.length?'<div class="c"><b>Últimos</b>'+vlog.map(v=>`<div style="margin:5px 0">${v.ok?'✅':'⚠️'} <small>${h(v.txt)}</small></div>`).join('')+'</div>':''}</div></div>`;
-const mdR=()=>`<div class="mo"><div class="sh"><h3>Estado de avance</h3><pre class="cp">${h(rpt)}</pre>
- <button class="bt" data-a="rsh">Compartir / enviar</button><button class="bt s" data-a="rcp">Copiar texto</button><button class="bt s" data-a="x">Cerrar</button></div></div>`;
+/* ---------- Resumen por día ----------
+   La bajada se atribuye al día en que ocurrió, recorriendo los movimientos en orden.
+   Como despachar implica que el bulto ya bajó, un despacho sin recepción previa
+   cuenta la bajada ese mismo día; así el avance nunca se pierde ni se cuenta dos veces. */
+const dk=ts=>{const d=new Date(ts);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')},
+hoyK=()=>dk(Date.now()),
+dlb=k=>{const p=String(k).split('-').map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'short'})},
+matn=b=>String(b&&b.d||'').split(' · ')[0].trim()||'(sin descripción)';
+function dias(){const an=new Set();S.mv.forEach(m=>{if(m.t=='a')an.add(m.ref)});
+ const B=new Map(S.bu.map(b=>[b.id,b])),St={},D={},
+ get=k=>D[k]??={k,baj:0,des:0,dmg:[],cods:[],mat:{},cli:{}};
+ S.mv.slice().sort((a,b)=>a.ts-b.ts).forEach(v=>{
+  if(v.t=='a'||an.has(v.id))return;const b=B.get(v.b);if(!b)return;
+  const g=get(dk(v.ts));
+  if(v.t=='x'){g.dmg.push({b,v});return}
+  if(v.t!='m'&&v.t!='d')return;
+  const s=St[v.b]??={m:0,d:0,baj:0};
+  if(v.t=='m')s.m+=v.n;else{s.d+=v.n;g.des+=v.n}
+  const nb=Math.max(s.m,s.d),inc=nb-s.baj;s.baj=nb;
+  if(inc>0){g.baj+=inc;g.cods.push({i:b.i,m:matn(b),n:inc});
+   g.mat[matn(b)]=(g.mat[matn(b)]||0)+inc;g.cli[b.c]=(g.cli[b.c]||0)+inc}});
+ return D}
+// Números del día elegido más el acumulado al cierre de ese día (sirve para días pasados)
+function diaInfo(k){const D=dias(),g=grupos();let ac=0,ad=0;
+ Object.keys(D).sort().forEach(x=>{if(x<=k){ac+=D[x].baj;ad+=D[x].des}});
+ const d=D[k]||{k,baj:0,des:0,dmg:[],cods:[],mat:{},cli:{}};
+ return{...d,k,ac,ad,muelle:Math.max(ac-ad,0),barco:Math.max(g.tot-ac,0),tot:g.tot}}
+function dkeys(){const s=new Set(Object.keys(dias()));s.add(hoyK());return[...s].sort()}
+const mdR=()=>{const ks=dkeys(),k=ks.includes(rday)?rday:ks[ks.length-1],i=ks.indexOf(k),
+ I=diaInfo(k),{C}=calc(),cl=[...C.values()],
+ mt=Object.entries(I.mat).sort((a,b)=>b[1]-a[1]),
+ T=(n,l,c)=>`<div class="t ${c}"><b>${n}</b><span>${l}</span></div>`;
+ return`<div class="mo"><div class="sh"><h3>Resumen del día</h3>
+ <div class="dn"><button data-a="rdia" data-i="${i-1}" ${i<=0?'disabled':''}>‹</button><b>${h(dlb(k))}</b><button data-a="rdia" data-i="${i+1}" ${i>=ks.length-1?'disabled':''}>›</button></div>
+ <div class="gd">${T(I.baj,'Bajaron este día','g')}${T(pct(I.baj,I.tot)+'%','Del buque, este día','n')}${T(I.des,'Despachados este día','b')}${T(I.dmg.length,'Daños este día',I.dmg.length?'r':'n')}</div>
+ <div class="c"><div class="rw"><b>Avance acumulado</b><b style="font-size:22px">${pct(I.ac,I.tot)}%</b></div><div class="ba"><i style="width:${pct(I.ac,I.tot)}%"></i></div>
+ <div class="g3" style="margin-top:8px">${T(I.barco,'Quedan en barco','n')}${T(I.muelle,'En muelle','g')}${T(I.ad,'Despachados','b')}</div>
+ <small>${I.ac} de ${I.tot} bultos bajados al cierre de este día.</small></div>
+ ${mt.length?`<div class="c"><b>Qué bajó este día</b><div class="tb">${mt.map(([m,n])=>`<div class="tr"><span>${h(m)}</span><b>${n}</b></div>`).join('')}</div></div>`:'<div class="c">Este día no bajó ningún bulto.</div>'}
+ ${cl.length>1&&Object.keys(I.cli).length?`<div class="c"><b>Por cliente, este día</b><div class="tb">${Object.entries(I.cli).sort((a,b)=>b[1]-a[1]).map(([id,n])=>`<div class="tr"><span>${h((C.get(id)||{}).n||id)}</span><b>${n}</b></div>`).join('')}</div></div>`:''}
+ ${cl.length>1?`<div class="c"><b>Acumulado por cliente</b><div class="tb">${grupos().L.map(x=>`<div class="tr"><span>${h(x.c.n)}</span><b>${x.baj}/${x.q}${x.q-x.baj?' · faltan '+(x.q-x.baj):''}</b></div>`).join('')}</div></div>`:''}
+ ${I.dmg.length?`<div class="c" style="border-color:var(--r)"><b>Daños de este día (${I.dmg.length})</b><div class="tb">${I.dmg.map(({b,v})=>`<div class="tr" style="display:block"><b>${h(b.i)}</b> <small>${h(matn(b))}</small><br>${h(v.x)}<br>${v.f&&v.f.length?CP(v.f):'<small style="color:var(--r)">Sin foto</small>'}</div>`).join('')}</div></div>`:''}
+ ${I.cods.length?`<button class="bt s" data-a="rdet">${rdet?'Ocultar':'Ver'} los ${I.cods.length} códigos de este día</button>${rdet?`<div class="c"><div class="tb">${I.cods.map(c=>`<div class="tr"><span><b>${h(c.i)}</b> <small>${h(c.m)}</small></span><b>${c.n>1?'×'+c.n:''}</b></div>`).join('')}</div></div>`:''}`:''}
+ <button class="bt" data-a="rsh">Compartir / enviar</button><button class="bt s" data-a="rcp">Copiar texto</button><button class="bt s" data-a="x">Cerrar</button></div></div>`};
 
-function repTxt(){const g=grupos(),{M,C}=calc(),D=[];S.bu.forEach(b=>M[b.id].dmg.forEach(m=>D.push([b,m])));
- const L=['ESTADO DE DESCARGA'+(S.v&&S.v!='PRUEBA'?' · viaje '+S.v:''),new Date().toLocaleString('es-CL'),'',
- 'AVANCE: '+pct(g.baj,g.tot)+'% del buque ('+g.baj+' de '+g.tot+' bultos bajados)',
- 'En muelle por despachar: '+g.mue,'Despachados: '+g.des,''];
- const pri=g.L.filter(x=>x.pri),par=g.L.filter(x=>!x.pri);
- pri.forEach(x=>L.push(String(x.c.n).toUpperCase()+' — '+pct(x.baj,x.q)+'% ('+x.baj+'/'+x.q+') · en muelle '+x.mue+' · despachados '+x.d));
- if(par.length){L.push('','CLIENTES PARTICULARES');par.forEach(x=>L.push('• '+x.c.n+': '+x.baj+'/'+x.q+' bajados'+(x.mue?' · '+x.mue+' en muelle':'')+(x.q-x.baj?' · '+(x.q-x.baj)+' aún en el barco':'')))}
- if(D.length){L.push('','DAÑOS ('+D.length+')');D.forEach(([b,m])=>L.push('• '+b.i+' · '+b.d+' ('+((C.get(b.c)||{}).n||'')+'): '+m.x+(m.f&&m.f.length?' ['+m.f.length+' foto'+(m.f.length==1?'':'s')+']':' [SIN FOTO]')))}
+// Texto para WhatsApp. Los ``` hacen que la tabla salga con las columnas alineadas.
+function repTxt(){const ks=dkeys(),k=ks.includes(rday)?rday:ks[ks.length-1],I=diaInfo(k),{C}=calc(),cl=[...C.values()];
+ const L=['*ESTADO DE DESCARGA*'+(S.v&&S.v!='PRUEBA'?' · '+S.v:''),dlb(k),'',
+ 'Bajaron este día: '+I.baj+' bultos ('+pct(I.baj,I.tot)+'% del buque)',
+ 'Despachados este día: '+I.des];
+ if(I.dmg.length)L.push('Daños este día: '+I.dmg.length);
+ L.push('','*Avance acumulado: '+pct(I.ac,I.tot)+'%* — '+I.ac+' de '+I.tot+' bultos',
+ 'Quedan en el barco: '+I.barco,'En muelle por despachar: '+I.muelle);
+ const mt=Object.entries(I.mat).sort((a,b)=>b[1]-a[1]);
+ if(mt.length){const w=Math.min(28,Math.max(...mt.map(([m])=>m.length)));
+  L.push('','Qué bajó este día:','```');
+  mt.forEach(([m,n])=>L.push(m.slice(0,28).padEnd(w,' ')+'  '+String(n).padStart(3,' ')));
+  L.push('```')}
+ if(cl.length>1&&Object.keys(I.cli).length){L.push('','Por cliente, este día:');
+  Object.entries(I.cli).sort((a,b)=>b[1]-a[1]).forEach(([id,n])=>L.push('• '+((C.get(id)||{}).n||id)+': '+n))}
+ if(cl.length>1){L.push('','ACUMULADO POR CLIENTE');
+  grupos().L.forEach(x=>L.push('• '+x.c.n+': '+x.baj+'/'+x.q+' bajados'+(x.mue?' · '+x.mue+' en muelle':'')+(x.q-x.baj?' · faltan '+(x.q-x.baj)+' en el barco':'')))}
+ if(I.dmg.length){L.push('','*DAÑOS DE ESTE DÍA ('+I.dmg.length+')*');
+  I.dmg.forEach(({b,v})=>L.push('• '+b.i+' · '+matn(b)+': '+v.x+(v.f&&v.f.length?' [con foto]':' [SIN FOTO]')))}
  if(S.op)L.push('','Registró: '+S.op);return L.join('\n')}
 function avcTxt(id){const g=grupos().L.find(x=>x.c.id==id);if(!g)return'';
  return(g.c.n||'')+': de tus '+g.q+' bultos ya bajaron '+g.baj+(g.mue?' ('+g.mue+' en el muelle por retirar)':'')+(g.q-g.baj?'. Quedan '+(g.q-g.baj)+' en el barco.':'. Está todo abajo.')}
@@ -301,9 +369,11 @@ async dok(id){return G(async()=>{const b=S.bu.find(b=>b.id==id);if(!b)return;con
  if(!ob)return alert('Describe el daño.');if(!pf.length)return alert('Falta la foto. Es la prueba del daño.');
  let f;try{f=await sv()}catch(e){return alert('No se pudieron guardar las fotos. No se registró el daño.')}
  S.mv.push({id:++S.n,t:'x',b:id,n:0,x:ob,f,...U(),ts:Date.now()});save();pf=[];md='';mk='';cur=null;R();say('Daño registrado en '+b.i);toast('Daño registrado con foto')})},
-rep(){rpt=repTxt();md=mdR();mk='rp';RM()},
-rsh(){if(navigator.share)navigator.share({text:rpt}).catch(()=>{});else A.rcp()},
-rcp(){cp(rpt)},
+rep(){rday=hoyK();rdet=0;md=mdR();mk='rp';RM()},
+rdia(i){const ks=dkeys();rday=ks[Math.max(0,Math.min(ks.length-1,+i))];rdet=0;md=mdR();RM()},
+rdet(){rdet=!rdet;md=mdR();RM()},
+rsh(){const t=repTxt();if(navigator.share)navigator.share({text:t}).catch(()=>{});else cp(t)},
+rcp(){cp(repTxt())},
 avc(i){cp(avcTxt(i))},
 lok(id){const a=S.au[$('#au').value],mt=$('#mt').value.trim(),c=calc().C.get(id);
  if(!a||hs($('#pn').value)!=a.p)return alert('PIN incorrecto.');if(!mt)return alert('Escribe el motivo.');
